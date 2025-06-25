@@ -1,0 +1,46 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.SideshowMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Sideshow">
+        select sideshow.*, venue.title as venueName from `sideshow`
+        left join venue on sideshow.venue_id = venue.id
+        <where>
+            <if test="venueName != null"> and venue.title like concat('%', #{venueName}, '%')</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `sideshow`
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Sideshow" useGeneratedKeys="true">
+        insert into `sideshow`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="img != null">img,</if>
+            <if test="venueId != null">venue_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="img != null">#{img},</if>
+            <if test="venueId != null">#{venueId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Sideshow">
+        update `sideshow`
+        <set>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="venueId != null">
+                venue_id = #{venueId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

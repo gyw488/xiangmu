@@ -1,0 +1,77 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.VenueMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Venue">
+        select venue.*, venue_admin.name as venueAdminName
+        from `venue`
+        left join venue_admin on venue.admin_id = venue_admin.id
+        <where>
+            <if test="title != null"> and venue.title like concat('%', #{title}, '%')</if>
+            <if test="adminId != null"> and venue.admin_id = #{adminId}</if>
+            <if test="status != null"> and venue.status = #{status}</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `venue`
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Venue" useGeneratedKeys="true">
+        insert into `venue`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="img != null">img,</if>
+            <if test="description != null">description,</if>
+            <if test="address != null">address,</if>
+            <if test="adminId != null">admin_id,</if>
+            <if test="num != null">num,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="img != null">#{img},</if>
+            <if test="description != null">#{description},</if>
+            <if test="address != null">#{address},</if>
+            <if test="adminId != null">#{adminId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Venue">
+        update `venue`
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

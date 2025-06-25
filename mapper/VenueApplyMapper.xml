@@ -1,0 +1,66 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.VenueApplyMapper">
+
+    <select id="selectAll" resultType="com.example.entity.VenueApply">
+        select venue_apply.*, user.name as userName, venue.title as venueName from `venue_apply`
+        left join user on venue_apply.user_id = user.id
+        left join venue on venue_apply.venue_id = venue.id
+        <where>
+            <if test="adminId != null"> and venue_apply.admin_id = #{adminId}</if>
+            <if test="userId != null"> and venue_apply.user_id = #{userId}</if>
+            <if test="status != null"> and venue_apply.status = #{status}</if>
+            <if test="venueName != null"> and venue.title like concat('%', #{venueName}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <delete id="deleteById">
+        delete from `venue_apply`
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.VenueApply" useGeneratedKeys="true">
+        insert into `venue_apply`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="venueId != null">venue_id,</if>
+            <if test="adminId != null">admin_id,</if>
+            <if test="time != null">time,</if>
+            <if test="days != null">days,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="description != null">description,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="venueId != null">#{venueId},</if>
+            <if test="adminId != null">#{adminId},</if>
+            <if test="time != null">#{time},</if>
+            <if test="days != null">#{days},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="description != null">#{description},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.VenueApply">
+        update `venue_apply`
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="userStatus != null">
+                userStatus = #{userStatus},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
